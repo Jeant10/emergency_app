@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>Open Chat</ion-title>
+    <ion-title>Alertas</ion-title>
     <ion-buttons slot="end">
       <ion-button fill="clear" (click)="signOut()">
         <ion-icon name="log-out" slot="icon-only"></ion-icon>
@@ -22,7 +22,34 @@
         <div class="time ion-text-right"><br>{{ message.createdAt?.toMillis() | date:'short' }}</div>
       </ion-col>
     </ion-row>
+
   </ion-grid>
+
+
+  <!-- Añadiendo boton -->
+
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button [routerLink]=[]>
+      <ion-icon name="chevron-up-circle"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top">
+      <ion-fab-button>
+        <ion-icon (click)="addPhotoToGallery()" name="camera-outline"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button>
+        <ion-icon name="videocam-outline"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button>
+        <ion-icon name="mic-outline"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button>
+        <ion-icon name="location-outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
+  
+
+  <!-- ion-fab markup  -->
 
 </ion-content>
 

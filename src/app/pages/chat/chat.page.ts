@@ -4,6 +4,13 @@ import { Observable } from 'rxjs';
 import { ChatService } from '../../services/chat.service';
 import { Router } from '@angular/router';
 
+//2
+
+import { PhotoService } from '../../services/photo.service';
+
+
+
+
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.page.html',
@@ -16,7 +23,7 @@ export class ChatPage implements OnInit {
   messages: Observable<any[]>;
   newMsg = '';
 
-  constructor(private chatService: ChatService, private router: Router) { }
+  constructor(private chatService: ChatService, private router: Router, public photoService: PhotoService) { }
 
   ngOnInit() {
     this.messages = this.chatService.getChatMessages();
@@ -33,6 +40,10 @@ export class ChatPage implements OnInit {
     this.chatService.signOut().then(() => {
       this.router.navigateByUrl('/', { replaceUrl: true });
     });
+  }
+
+  addPhotoToGallery() {
+    this.photoService.addNewToGallery();
   }
 
 }
