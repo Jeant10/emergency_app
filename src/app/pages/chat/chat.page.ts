@@ -43,7 +43,7 @@ export class ChatPage implements OnInit {
   }
 
   addPhotoToGallery() {
-    this.photoService.addNewToGallery();
+    this.photoService.takePicture();
   }
 
 }
