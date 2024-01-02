@@ -42,9 +42,12 @@ export class PhotoService {
         });
         console.log('image: ', image);
         this.image = image.dataUrl;
+        console.log("url: ", image.dataUrl);
+        console.log("tipo:", typeof(this.image));
         await this.showLoading();
         const blob = this.dataURLtoBlob(image.dataUrl);
         const url = await this.uploadImage(blob, image.format);
+        console.log("formato: ", image.format);
         console.log(url);
         const response = await this.addDocument('test', { imageUrl: url });
         console.log(response);

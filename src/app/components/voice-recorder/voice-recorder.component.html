@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="" defaultHref="/"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      Voice Recorder
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-button (click)="recorder()" expand="block" fill="clear" shape="round">
+    Grabar
+  </ion-button>
+  <ion-button (click)="stop()" expand="block" fill="clear" shape="round">
+    Detener
+  </ion-button>
+
+
+  <ion-list>
+    <ion-item *ngFor="let f of storedFileNames" (click)="play(f)">
+      {{f.name}}
+    </ion-item>
+  </ion-list>
+ 
+</ion-content>

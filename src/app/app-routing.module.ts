@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { canActivate, redirectUnauthorizedTo, redirectLoggedInTo } from '@angular/fire/compat/auth-guard';
+import { VoiceRecorderComponent } from './components/voice-recorder/voice-recorder.component';
 
 // Send unauthorized users to login
 const redirectUnauthorizedToLogin = () =>
@@ -19,6 +20,11 @@ const routes: Routes = [
     path: 'chat',
     ...canActivate(redirectUnauthorizedToLogin),
     loadChildren: () => import('./pages/chat/chat.module').then( m => m.ChatPageModule)
+  },
+  {
+    path: 'voice',
+    ...canActivate(redirectUnauthorizedToLogin),
+    component: VoiceRecorderComponent
   }
 ];
 

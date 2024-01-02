@@ -21,16 +21,18 @@ import { environment } from '../environments/environment';
 import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
 import { provideStorage,getStorage } from '@angular/fire/storage';
 import { provideFirestore,getFirestore } from '@angular/fire/firestore';
+import { VoiceRecorder } from 'capacitor-voice-recorder';
+import { VoiceRecorderComponent } from './components/voice-recorder/voice-recorder.component';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent,VoiceRecorderComponent],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireAuthModule,
     AngularFirestoreModule,
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)), 
     provideStorage(() => getStorage()), 
-    provideFirestore(() => getFirestore())
+    provideFirestore(() => getFirestore()),
   ],
   providers: [
     StatusBar,
