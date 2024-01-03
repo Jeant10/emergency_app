@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color = "primary">
     <ion-buttons slot="start">
       <ion-back-button text="" defaultHref="/"></ion-back-button>
     </ion-buttons>
@@ -9,20 +9,36 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-
-  <ion-button (click)="recorder()" expand="block" fill="clear" shape="round">
-    Grabar
-  </ion-button>
-  <ion-button (click)="stop()" expand="block" fill="clear" shape="round">
-    Detener
-  </ion-button>
-
+<ion-content >
+  <!-- <ion-button (click)="startRecording()" expand = "full">Start</ion-button>
+  <ion-button (click)="startRecording()" expand = "full">Start</ion-button> -->
 
   <ion-list>
-    <ion-item *ngFor="let f of storedFileNames" (click)="play(f)">
-      {{f.name}}
+    <ion-item *ngFor="let f of storedFileNames" (click)="playFile(f)" detail="false">
+      {{ f.name }}
+      <ion-button slot="end" (click)="deleteRecording(f)" fill="clear" color="danger">
+        <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+      </ion-button>
     </ion-item>
   </ion-list>
- 
 </ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-row class="ion-align-items-center">
+      <ion-col size="10">
+        <span *ngIf="!recording">
+          Press and hold to record
+        </span>
+        <span *ngIf="recording">
+          {{ durationDisplay }}
+        </span>
+      </ion-col>
+      <ion-col>
+        <ion-button fill="clear" #recordbtn>
+          <ion-icon name="mic-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+</ion-footer>

@@ -25,7 +25,13 @@ const routes: Routes = [
     path: 'voice',
     ...canActivate(redirectUnauthorizedToLogin),
     component: VoiceRecorderComponent
+  },
+  {
+    path: 'video',
+    ...canActivate(redirectUnauthorizedToLogin),
+    loadChildren: () => import('./pages/video/video.module').then( m => m.VideoPageModule)
   }
+
 ];
 
 @NgModule({

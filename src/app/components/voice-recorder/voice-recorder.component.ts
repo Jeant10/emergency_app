@@ -1,82 +1,119 @@
-import { Component, OnInit } from '@angular/core';
-import { Filesystem, Directory } from '@capacitor/filesystem';
-
-
+import { Component, OnInit, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
+import { Directory, Filesystem } from '@capacitor/filesystem';
+import { Haptics, ImpactStyle } from '@capacitor/haptics';
+import { GestureController } from '@ionic/angular';
+import { RecordingData, VoiceRecorder } from 'capacitor-voice-recorder';
 
 import { Firestore, addDoc, collection } from '@angular/fire/firestore';
 import { Storage, getDownloadURL, ref, uploadBytes } from '@angular/fire/storage';
 
 //1
 
-// only 'VoiceRecorder' is mandatory, the rest is for typing
-import { VoiceRecorder, VoiceRecorderPlugin, RecordingData, GenericResponse, CurrentRecordingStatus } from 'capacitor-voice-recorder';
 
 @Component({
   selector: 'app-voice-recorder',
   templateUrl: './voice-recorder.component.html',
   styleUrls: ['./voice-recorder.component.scss'],
 })
-export class VoiceRecorderComponent  implements OnInit {
+
+export class VoiceRecorderComponent  implements OnInit, AfterViewInit  {
 
 
-  isRecording: boolean = false;
-  isPlay: boolean;
-  fileName:string = "";
-  storedFileNames:any = [];
+  recording = false;
+  storedFileNames = [];
+  durationDisplay = '';
+  duration = 0;
 
-  constructor(private firestore: Firestore,
-    private storage: Storage,) { }
+  @ViewChild('recordbtn', {read: ElementRef})
+  recordbtn: ElementRef;
 
-  ngOnInit(
-  ) 
-  {
 
+  constructor(private gestureCtrl : GestureController, private firestore: Firestore,
+    private storage: Storage) { }
+
+  ngOnInit() {
     this.loadFiles();
+    VoiceRecorder.requestAudioRecordingPermission();
+  }
 
-    VoiceRecorder.hasAudioRecordingPermission().then(result=>{
-      if(!result.value){
-        VoiceRecorder.requestAudioRecordingPermission();
+  ngAfterViewInit() {
+    const longpress = this.gestureCtrl.create({
+      el: this.recordbtn.nativeElement,
+      threshold: 0,
+      gestureName: 'long-press',
+      onStart: ev => {
+        Haptics.impact({style: ImpactStyle.Light });
+        this.startRecording();
+        this.calculateDuration();
+      },
+      onEnd: ev => {
+        Haptics.impact({style: ImpactStyle.Light });
+        this.stopRecording();
       }
-    })
+    }, true);
 
-    this.fileName = new Date().getTime() + '.wav';
-
-    
+    longpress.enable();
   }
 
-  recorder(){
-
-    if(this.isRecording){
+  calculateDuration () {
+    if(!this.recording) {
+      
+      this.duration = 0;
+      this.durationDisplay ='';
       return;
     }
-    this.isRecording = true;
-    VoiceRecorder.startRecording();
+
+    this.duration += 1;
+    const minutes = Math.floor(this.duration / 60);
+    const seconds = (this.duration % 60).toString().padStart(2, '0');
+
+    this.durationDisplay = `${minutes}:${seconds}`;
+
+
+    setTimeout(() => {
+      this.calculateDuration();
+    }, 1000);
   }
 
-  stop(){
-    if(!this.isRecording){
+  async loadFiles() {
+    Filesystem.readdir({
+      path: '',
+      directory: Directory.Data
+    }).then(result => {
+      console.log('Loaded files: ', result);
+      this.storedFileNames = result.files;
+    });
+  }
+
+  startRecording(){
+    if(this.recording) {
+      return;
+  }
+  this.recording = true;
+  VoiceRecorder.startRecording();
+}
+
+  stopRecording() {
+    if(!this.recording) {
       return;
     }
-    VoiceRecorder.stopRecording().then(async (result: RecordingData)=>{
-      if(result.value){
-        //en base64
+    VoiceRecorder.stopRecording().then(async (result: RecordingData) => {
+      this.recording = false;
+      if(result.value && result.value.recordDataBase64) {
         const recordData = result.value.recordDataBase64;
-
         console.log(recordData);
-
-        //Guardar el audio en filesystem, no en firebase
-        
-        //guardo el audio
+        const fileName = new Date().getTime() + '.wav';
         await Filesystem.writeFile({
-          //nombre del archivo
-          path: this.fileName,
+          path: fileName,
           directory: Directory.Data,
           data: recordData
         });
 
-            //extension del audio
+        //firebase
+
+        //extension del audio
         const mimeType = "audio/aac";
-    //para reproducirlo
+        //para reproducirlo
         const audioRef = new Audio(`data:${mimeType};base64,${recordData}`);
 
         const blob = this.dataURLtoBlob(audioRef.src);
@@ -86,51 +123,59 @@ export class VoiceRecorderComponent  implements OnInit {
         console.log(response);
 
         this.loadFiles();
-        
       }
-    });
-
+    })
   }
 
-
-  async play(fileName){
-    //obtengo el audio en base64?
-    const audio = await Filesystem.readFile({
-      //nombre del archivo
-      path: fileName.name,
-      directory: Directory.Data,
+  async playFile(filename) {
+    const audioFile = await Filesystem.readFile({
+      path: filename.name,
+      directory: Directory.Data
     });
+    const base64Sound = audioFile.data;
 
-    const base64Sound = audio.data;
-
-    if(!base64Sound){
-      return;
-    }
-
-    this.isPlay = true;
-    //extension del audio
-    const mimeType = "audio/aac";
-    //para reproducirlo
-    const audioRef = new Audio(`data:${mimeType};base64,${base64Sound}`);
-    console.log(audioRef.src);
+    const audioRef = new Audio(`data:audio/aac;base64,${base64Sound}`)
     audioRef.oncanplaythrough = () => audioRef.play();
-    audioRef.load();
-
+    audioRef.load;
   }
 
-
-  //aqui es para ver los archivos de audio que grabo
-
-  async loadFiles(){
-    Filesystem.readdir({
-      path:'',
-      directory:Directory.Data
-    }).then(result => {
-      console.log(result)
-      this.storedFileNames = result.files;
+  async deleteRecording(fileName) {
+    await Filesystem.deleteFile({
+      directory: Directory.Data,
+      path: fileName.name
     });
+    this.loadFiles();
   }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  //firebase
 
   //esto es como de la foto, en si lo que entendi, es que esto de pasa de una url a un blob, que es para asi subirle al firebasew
 
