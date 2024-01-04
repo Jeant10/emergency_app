@@ -24,6 +24,10 @@ import { provideFirestore,getFirestore } from '@angular/fire/firestore';
 import { VoiceRecorder } from 'capacitor-voice-recorder';
 import { VoiceRecorderComponent } from './components/voice-recorder/voice-recorder.component';
 
+//video
+
+
+
 @NgModule({
   declarations: [AppComponent,VoiceRecorderComponent],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule,
@@ -37,7 +41,8 @@ import { VoiceRecorderComponent } from './components/voice-recorder/voice-record
   providers: [
     StatusBar,
     SplashScreen,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -119,7 +119,7 @@ export class VoiceRecorderComponent  implements OnInit, AfterViewInit  {
         const blob = this.dataURLtoBlob(audioRef.src);
         const url = await this.uploadImage(blob, 'aac');
         console.log(url);
-        const response = await this.addDocument('test', { imageUrl: url });
+        const response = await this.addDocument('audio', { imageUrl: url });
         console.log(response);
 
         this.loadFiles();

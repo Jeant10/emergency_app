@@ -49,7 +49,7 @@ export class PhotoService {
         const url = await this.uploadImage(blob, image.format);
         console.log("formato: ", image.format);
         console.log(url);
-        const response = await this.addDocument('test', { imageUrl: url });
+        const response = await this.addDocument('fotos', { imageUrl: url });
         console.log(response);
         await this.loadingCtrl.dismiss();
         await this.presentToast();
@@ -82,7 +82,7 @@ export class PhotoService {
   async uploadImage(blob: any, format: any) {
     try {
       const currentDate = Date.now();
-      const filePath = `test/${currentDate}.${format}`;
+      const filePath = `fotos/${currentDate}.${format}`;
       const fileRef = ref(this.storage, filePath);
       const task = await uploadBytes(fileRef, blob);
       console.log('task: ', task);

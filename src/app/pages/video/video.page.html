@@ -8,5 +8,23 @@
 </ion-header>
 
 <ion-content>
-  
+  <video class="video" #video autoplay playsinline muted [hidden]="!isRecording"></video>
+
+  <div id="fullscreen" slot="fixed">
+
+  </div>
+
+  <!-- lista de videos -->
+
+  <ion-list *ngIf="!isRecording">
+    <ion-item *ngFor="let video of videos" (click)="playVideo(video)" tappable>
+      {{video.split('/').pop()}}
+    </ion-item> 
+  </ion-list>
+
+  <ion-fab vertical="bottom" horizontal="center" slot="fixed">
+    <ion-fab-button (click)="isRecording ? stopRecord(): recordVideo()">
+      <ion-icon [name]="isRecording ? 'stop' : 'videocam'"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>
