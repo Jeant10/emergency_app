@@ -30,7 +30,11 @@ const routes: Routes = [
     path: 'video',
     ...canActivate(redirectUnauthorizedToLogin),
     loadChildren: () => import('./pages/video/video.module').then( m => m.VideoPageModule)
+  },  {
+    path: 'gps',
+    loadChildren: () => import('./pages/gps/gps.module').then( m => m.GpsPageModule)
   }
+
 
 ];
 

@@ -1,0 +1,48 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="" defaultHref="/"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      Gps
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="ion-padding">
+    <ion-button (click)="getCurrentLocation()" expand="block">
+        Obtener ubicacion
+    </ion-button>
+    <ion-list>
+        <ion-list-header>
+          Tu ubicacion
+        </ion-list-header>
+        <ion-item>
+          <ion-label>Latitude</ion-label>
+          <ion-badge color="danger" slot="end">{{latitude}}</ion-badge>
+        </ion-item>
+        <ion-item>
+          <ion-label>Longitud</ion-label>
+          <ion-badge color="danger" slot="end">{{longitude}}</ion-badge>
+        </ion-item>
+        <ion-item>
+          <ion-label>Url</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-badge color="danger" slot="end">{{url}}</ion-badge>
+        </ion-item>
+        <ion-button (click)="openGoogleMaps()" expand="block">
+          Abrir en Google Maps
+      </ion-button>
+    </ion-list>
+  </div>
+<!-- 
+  <div>
+    <iframe
+    src="getMap()"
+    width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+    referrerpolicy="no-referrer-when-downgrade"></iframe>
+  </div> -->
+
+</ion-content>

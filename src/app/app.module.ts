@@ -27,7 +27,6 @@ import { VoiceRecorderComponent } from './components/voice-recorder/voice-record
 //video
 
 
-
 @NgModule({
   declarations: [AppComponent,VoiceRecorderComponent],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule,
